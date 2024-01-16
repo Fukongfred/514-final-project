@@ -9,10 +9,10 @@
 ![idea 1](https://github.com/Fukongfred/514-final-project/assets/147664394/69567935-336c-4161-86c2-845759872884)
 
 ## Sensing Device
-photo
+![idea 2](https://github.com/Fukongfred/514-final-project/assets/147664394/7c331a1a-edde-4659-a380-eed7e49d8247)
 
 ## Display Device
-photo
+![idea 3](https://github.com/Fukongfred/514-final-project/assets/147664394/3c3e747d-8870-4fd4-8bb7-5bfa7273b2cf)
 
 ## System Architecture
-photo
+![idea 4](https://github.com/Fukongfred/514-final-project/assets/147664394/192bb867-cf74-4f90-b817-79cb09ce6943)
