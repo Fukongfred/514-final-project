@@ -1,4 +1,4 @@
-# A cold but highly effective method to prevent oversleeping
+# ChillWake: A cold but highly effective method to prevent oversleeping
 **An alarm clock that only turns off after you take a swig of mouthwash.**
 
 ## Work Flow
