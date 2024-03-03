@@ -1,0 +1,147 @@
+// void updateDisplay();
+// void finishCountdown();
+
+// #include <BLEDevice.h>
+// #include <BLEServer.h>
+// #include <BLEUtils.h>
+// #include <BLE2902.h>
+// #include <Adafruit_GFX.h>
+// #include <Adafruit_SSD1306.h>
+// #include <AccelStepper.h>
+// #include <Adafruit_NeoPixel.h>
+// #include <stdlib.h>
+
+// #define OLED_RESET    -1
+// Adafruit_SSD1306 display(128, 64, &Wire, OLED_RESET);
+
+// // Define pin for LED strip and number of LEDs
+// #define LED_STRIP_PIN D6 // Adjust to your actual pin
+// #define NUM_LEDS      10 // Adjust based on your LED strip
+
+// // Initialize the LED strip
+// Adafruit_NeoPixel strip(NUM_LEDS, LED_STRIP_PIN, NEO_GRB + NEO_KHZ800);
+
+// // Define pins for the buttons
+// const int buttonUpPin = D9; // Adjust to your actual pin
+// const int buttonDownPin = D8; // Adjust to your actual pin
+// const int buttonConfirmPin = D7; // Adjust to your actual pin
+
+// // Define stepper motor control pins and settings
+// #define MOTOR_STEPS 2038 // Define the number of steps per revolution for your stepper motor
+// #define MOTOR_PIN1  D0
+// #define MOTOR_PIN2  D1
+// #define MOTOR_PIN3  D2
+// #define MOTOR_PIN4  D3
+// AccelStepper stepper(AccelStepper::FULL4WIRE, MOTOR_PIN1, MOTOR_PIN2, MOTOR_PIN3, MOTOR_PIN4);
+
+// // Variables for countdown
+// unsigned int countdownTime = 5; // default 5 seconds
+// bool countdownStarted = false;
+
+// // Bluetooth setup
+// BLEServer* pServer = nullptr;
+// BLECharacteristic* pCharacteristic = nullptr;
+// bool deviceConnected = false;
+// bool oldDeviceConnected = false;
+// #define SERVICE_UUID        "cbc8b292-c579-417d-bdae-9219a6362a83"
+// #define CHARACTERISTIC_UUID "5a645de1-e060-40f5-9745-646e2b954b27"
+
+// void setup() {
+//   Serial.begin(115200);
+
+//   // Initialize the OLED display
+//   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  
+//   display.clearDisplay();
+//   display.setTextSize(2);
+//   display.setTextColor(WHITE);
+
+//   // Initialize the button pins
+//   pinMode(buttonUpPin, INPUT_PULLUP);
+//   pinMode(buttonDownPin, INPUT_PULLUP);
+//   pinMode(buttonConfirmPin, INPUT_PULLUP);
+
+//   // Initialize the LED strip
+//   strip.begin();
+//   strip.show(); // Initialize all pixels to 'off'
+
+//   // Initialize the stepper motor
+//   stepper.setMaxSpeed(1000);
+//   stepper.setAcceleration(500);
+
+//   // Initialize BLE
+//   BLEDevice::init("Device1");
+//   pServer = BLEDevice::createServer();
+//   pCharacteristic = pServer->createService(SERVICE_UUID)->createCharacteristic(
+//                       CHARACTERISTIC_UUID,
+//                       BLECharacteristic::PROPERTY_READ |
+//                       BLECharacteristic::PROPERTY_WRITE
+//                     );
+//   pCharacteristic->addDescriptor(new BLE2902());
+//   BLEDevice::startAdvertising();
+//   Serial.println("Waiting for a client connection to notify...");
+// }
+
+// void loop() {
+// // Handle BLE connection
+//   if (deviceConnected) {
+//       if (!oldDeviceConnected) {
+//           oldDeviceConnected = deviceConnected;
+//       }
+//   } else if (!deviceConnected && oldDeviceConnected) {
+//       pServer->startAdvertising(); // Restart advertising
+//       oldDeviceConnected = deviceConnected;
+//   }
+
+//   // Countdown setup with buttons
+//   if (!countdownStarted) {
+//     if (digitalRead(buttonUpPin) == LOW) {
+//       countdownTime++;
+//       delay(200); // Debounce
+//     } else if (digitalRead(buttonDownPin) == LOW) {
+//       countdownTime = max(1U, countdownTime - 1);
+//       delay(200); // Debounce
+//     } else if (digitalRead(buttonConfirmPin) == LOW) {
+//       countdownStarted = true;
+//       delay(200); // Debounce
+//     }
+//   }
+
+//   // Display countdown setup
+//   display.clearDisplay();
+//   display.setCursor(0,0);
+//   if (!countdownStarted) {
+//     display.println("Get Up In:");
+//     display.println(countdownTime);
+//     display.display();
+//   } else {
+//     // Start countdown
+//     for (int i = countdownTime; i >= 0; i--) {
+//       display.clearDisplay();
+//       display.setCursor(0,0);
+//       display.println("Wake UPPPP!!!!!");
+//       display.println(i);
+//       display.display();
+      
+//       // Update stepper motor and LED strip as a visualization
+//       stepper.moveTo(stepper.currentPosition() + (MOTOR_STEPS / countdownTime)); // Move stepper
+//       for(int j = 0; j < NUM_LEDS; j++) {
+//         strip.setPixelColor(j, strip.Color(153, 28, 155)); // Red color
+//         strip.show();
+//         delay(1000 / NUM_LEDS); // Update LED strip in segments
+//       }
+      
+//       if (i == 0) {
+//         // Send BLE signal to Device2
+//         pCharacteristic->setValue("Alarm");
+//         pCharacteristic->notify();
+//         delay(1000); // Ensure message is sent
+//       }
+
+//       stepper.run();
+//     }
+
+//     // Reset for next countdown
+//     countdownStarted = false;
+//     countdownTime = 30; // Reset to default or based on user input
+//   }
+// }
