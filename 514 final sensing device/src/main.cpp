@@ -186,7 +186,7 @@ void loop() {
 
   if (currentTime - lastTime >= sampleInterval) {
     // It's time to calculate the weight change average
-    currentWeight = analogRead(fsrPin);
+    currentWeight = 0.25 * analogRead(fsrPin) - 12.5;
     int weightChange = currentWeight - initialWeight;
 
         // Print the current weight and weight change to the Serial Monitor
